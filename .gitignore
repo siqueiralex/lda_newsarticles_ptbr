@@ -1,5 +1,7 @@
 models/
 data/
+results/
+datacomplete/
 __pycache__/
 .DS_Store
 .ipynb_checkpoints/

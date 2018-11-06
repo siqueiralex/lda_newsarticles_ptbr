@@ -8,12 +8,12 @@ class LdaMalletHandler:
     def __init__(self, mallet_path):
         self.mallet_path = mallet_path
 
-    def run_model(self, model_name, corpus, num_topics, workers=8):
+    def run_model(self, model_name, corpus, num_topics, workers=8, iterations=1000):
         self.model_name = model_name
         self.dictionary = Dictionary(corpus)
         corpus_bow = [self.dictionary.doc2bow(text) for text in corpus]
         os.makedirs("models/"+model_name, exist_ok=True )
-        self.model = LdaMallet(self.mallet_path, corpus_bow, num_topics=num_topics,id2word=self.dictionary, workers=workers, prefix="./models/"+model_name+"/")
+        self.model = LdaMallet(self.mallet_path, corpus_bow, num_topics=num_topics,id2word=self.dictionary, workers=workers, prefix="./models/"+model_name+"/", iterations=iterations)
 
     def save_model(self):
         self.model.save("models/"+self.model_name+"/model.model")
@@ -40,3 +40,13 @@ class LdaMalletHandler:
             topics.append(topic[1])    
         most_similar = self.doc_retriever.n_most_similar(topics, n=n, metric=metric)    
         return most_similar
+
+    def get_string_topics(self, num_topics=-1, num_words=10):
+        if(num_topics==-1):
+            num_topics = self.model.num_topics 
+        string_topics = []
+        for topic in self.model.print_topics(num_topics=num_topics, num_words=num_words):
+            splitted = topic[1].split("\"")
+            result = [splitted[2*i+1] for i in range(0,int(len(splitted)/2))]
+            string_topics.append(" ".join(result))
+        return string_topics    
