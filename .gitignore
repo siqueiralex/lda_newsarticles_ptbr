@@ -1,6 +1,5 @@
 models/
 data/
-results/
 datacomplete/
 ldamodels/
 __pycache__/
