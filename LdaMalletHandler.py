@@ -48,11 +48,7 @@ class LdaMalletHandler:
         os.makedirs("ldamodels/"+model_name, exist_ok=True )
         self.model = LdaMallet(self.mallet_path, corpus_bow, id2word=self.dictionary, prefix="./ldamodels/"+model_name+"/", **kwargs)
 
-    def save_model(self, corpus_path=None):
-        if(corpus_path!=None):
-            file = open("ldamodels/"+self.model_name+"/info.info", "w")
-            file.write(corpus_path+'\n')
-            file.close()
+    def save_model(self):
         self.model.save("ldamodels/"+self.model_name+"/model.model")
         self.dictionary.save("ldamodels/"+self.model_name+"/dict.dict")
 
@@ -61,11 +57,6 @@ class LdaMalletHandler:
         self.dictionary  = corpora.Dictionary.load("ldamodels/"+self.model_name+"/dict.dict")
         self.model = LdaMallet.load("ldamodels/"+self.model_name+"/model.model")
         self.model.mallet_path = self.mallet_path
-        
-        #file = open("ldamodels/"+self.model_name+"/info.info", "r")
-        #args = file.read().splitlines()
-        #file.close()
-        #self.corpus_path=args[0]
     
     def doc_topics(self, doc_idx):
         if(not hasattr(self, 'doc_retriever')):
